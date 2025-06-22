@@ -1,0 +1,13 @@
+simulation.*
+!simulation.pots
+log.*
+STOP
+EXIT
+RESTART
+*/geop-RESTART
+*/hessian.data
+*/input.xml
+*/ref.data
+*/run_pimd_ti.slurm*
+err.*
+out.*

@@ -1,0 +1,44 @@
+<simulation verbosity='low'>
+    <output prefix='simulation'>
+        <properties filename='out' stride='5'> [ step, time{picosecond}, conserved, temperature{kelvin} ] </properties>
+        <properties filename='pots' stride='5'> [ pot_component_raw(0), pot_component_raw(1) ] </properties>
+        <checkpoint stride='4000'/>
+    </output>
+    <total_steps> 200000 </total_steps>
+    <prng><seed> @RANDOM </seed></prng>
+
+    <!-->  defines the anharmonic PES <--> 
+    <ffsocket name='anharmonic' mode='unix' pbc='false'>
+        <address> @ADDRESS </address>
+    </ffsocket>
+
+    <!-->  defines the harmonic PES <--> 
+    <ffdebye name='harmonic'>
+        <hessian shape='(3,3)' mode='file'> hessian.data </hessian>
+        <x_reference mode='file'> ref.data </x_reference>
+        <v_reference> 0.0 </v_reference>
+    </ffdebye>
+
+    <system>
+        <initialize nbeads='1'>
+            <file mode='chk'>  geop-RESTART </file>
+            <velocities mode='thermal' units='kelvin'> 300 </velocities>
+        </initialize>
+        <forces>
+            <force forcefield='harmonic' weight='@HWEIGHT '> </force>  <!-->  set this to 1 - lambda <--> 
+            <force forcefield='anharmonic' weight='@AWEIGHT '> </force> <!-->  set this to lambda <--> 
+        </forces> 
+        <motion mode='dynamics'>
+            <fixcom> False </fixcom>
+            <dynamics mode='nvt'>
+                <timestep units='femtosecond'> 2.0 </timestep>
+                <thermostat mode='pile_l'>
+                    <tau units='femtosecond'> 20.0 </tau>
+                </thermostat>
+            </dynamics>
+        </motion>
+        <ensemble>
+            <temperature units='kelvin'> 300 </temperature>
+        </ensemble>
+    </system>
+</simulation>

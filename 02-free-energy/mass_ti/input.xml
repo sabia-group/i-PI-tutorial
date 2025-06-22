@@ -1,0 +1,33 @@
+<simulation verbosity='low'>
+   <output prefix='simulation'>
+      <properties filename='out' stride='1'> [ step, time{femtosecond}, conserved, temperature{kelvin}, kinetic_cv, potential] </properties>
+      <checkpoint stride='4000'/>
+   </output>
+   <total_steps> 50000 </total_steps>
+   <prng><seed> @RANDOM </seed></prng>
+   <ffsocket name='driver' mode='unix'>
+       <address> @ADDRESS </address>
+   </ffsocket>
+   <system>
+       <initialize nbeads='@NBEADS'>
+	       <file mode='xyz'> init.xyz </file>
+	       <velocities mode='thermal' units='kelvin'> 300 </velocities>
+	       <masses mode="manual"> [ @MASS ] </masses>
+       </initialize>
+       <forces>
+           <force forcefield='driver'> </force> 
+       </forces> 
+       <motion mode='dynamics'>
+	       <fixcom> False </fixcom>
+           <dynamics mode='nvt'>
+               <timestep units='femtosecond'> @DT </timestep>
+               <thermostat mode='pile_l'>
+                   <tau units='femtosecond'> @TAU </tau>
+               </thermostat>
+           </dynamics>
+       </motion>
+       <ensemble>
+           <temperature units='kelvin'> 300 </temperature>
+       </ensemble>
+    </system>
+</simulation>

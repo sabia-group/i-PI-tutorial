@@ -1,0 +1,8 @@
+numpy
+scipy
+matplotlib
+ipython
+notebook
+jupyterlab
+ase
+chemiscope

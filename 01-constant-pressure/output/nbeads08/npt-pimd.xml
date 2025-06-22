@@ -1,0 +1,41 @@
+<simulation verbosity='medium'>
+  <output prefix='ph2-npt-pimd'>
+    <properties filename='md' stride='10'> [step, time{picosecond}, conserved{electronvolt}, 
+                                            temperature{kelvin}, potential{electronvolt}, kinetic_md{electronvolt}, 
+                                            kinetic_cv{electronvolt}, pressure_cv{megapascal}, volume{angstrom3}]
+    </properties>
+    <trajectory filename='pos' stride='100' format='pdb' cell_units='angstrom'> positions{angstrom} </trajectory>
+    <checkpoint filename='checkpoint' stride='1000' overwrite='True'/>
+  </output>
+  <total_steps> 10000 </total_steps>
+  <ffsocket mode='unix' name='ph2-ff'>
+    <address> ph2-driver-pi</address>
+  </ffsocket>
+  <system>
+    <initialize nbeads='8'>
+      <file mode='chk'> classical-RESTART </file>
+      <velocities mode='thermal' units='kelvin'> 33 </velocities>
+    </initialize>
+    <forces>
+      <force forcefield='ph2-ff'/>
+    </forces>
+    <ensemble>
+      <temperature units='kelvin'> 33 </temperature>
+      <pressure units='megapascal'> 50 </pressure>
+    </ensemble>
+    <motion mode='dynamics'>
+      <dynamics mode='npt'>
+        <timestep units='femtosecond'> 1 </timestep>
+        <thermostat mode='pile_g'>
+          <tau units='femtosecond'> 25 </tau>
+        </thermostat>
+        <barostat mode='isotropic'>
+          <tau units='femtosecond'> 250 </tau>
+          <thermostat mode='langevin'>
+            <tau units='femtosecond'> 50 </tau>
+          </thermostat>
+        </barostat>
+      </dynamics>
+    </motion>
+  </system>
+</simulation>
