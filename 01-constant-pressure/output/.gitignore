@@ -1,4 +1,3 @@
 *.checkpoint
-*.pdb
 log.*
 RESTART
