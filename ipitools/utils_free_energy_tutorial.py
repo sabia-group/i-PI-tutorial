@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from ipitools.io import read_ipi_output
+from ipitools.io_ipi import read_ipi_output
 from pathlib import Path
 from ipi.utils.units import Constants, unit_to_user, unit_to_internal
 from ipi.pes.morse import MorseHarmonic_driver
