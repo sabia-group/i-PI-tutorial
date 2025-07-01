@@ -444,3 +444,48 @@ def plot_free_energy_decomposition(
     ax1.set_title("PIMD-TI route")
 
 
+def plot_MassTI_free_energy_decomposition(
+        F_ch, 
+        dF_ch2ca, dF_ch2ca_err, 
+        dF_ca2qa, dF_ca2qa_err,
+        F_ca_exact, F_qa_exact):
+
+    fig, ax = plt.subplots()
+    fig.set_size_inches((8, 5))
+
+    Ha_to_kJmol = unit_to_user("energy", "j/mol", 1.0e-3)
+    F_ch = F_ch * Ha_to_kJmol
+    dF_ch2ca = dF_ch2ca * Ha_to_kJmol
+    dF_ca2qa = dF_ca2qa * Ha_to_kJmol
+    dF_ch2ca_err = dF_ch2ca_err * Ha_to_kJmol
+    dF_ca2qa_err = dF_ca2qa_err * Ha_to_kJmol
+    F_ca_exact = F_ca_exact * Ha_to_kJmol
+    F_qa_exact = F_qa_exact * Ha_to_kJmol
+
+    F_ca = F_ch + dF_ch2ca
+    F_qa = F_ca + dF_ca2qa
+
+    yvals = [F_ch, dF_ch2ca, F_ca, dF_ca2qa, F_qa]
+    yerr = [np.nan, dF_ch2ca_err, dF_ch2ca_err, dF_ca2qa_err, 
+            np.sqrt(dF_ch2ca_err**2 + dF_ca2qa_err**2)]
+
+    labels = [r'$F_{\mathrm{ch}}$', 
+              r'$\Delta F_{\mathrm{ch} \to \mathrm{ca}}$', 
+              r'$F_{\mathrm{ca}}$', 
+              r'$\Delta F_{\mathrm{ca} \to \mathrm{qa}}$', 
+              r'$F_{\mathrm{qa}}$']
+
+    colors = ["tab:green", "tab:pink", "tab:red", "tab:cyan", "tab:blue"]
+
+    ax.bar(labels, yvals, yerr=yerr, capsize=5, color=colors)
+
+    ax.axhline(F_ca_exact, c="tab:red", ls="--", label=r'$F_{\mathrm{ca}}^{\mathrm{exact}}$')
+    ax.axhline(F_qa_exact, c="tab:blue", ls="--", label=r'$F_{\mathrm{qa}}^{\mathrm{exact}}$')
+
+    ax.set_ylabel('Free energy [kJ/mol]')
+    ax.set_title("Mass-TI Free Energy Decomposition")
+    ax.legend()
+    fig.tight_layout()
+    plt.show()
+
+
