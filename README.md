@@ -24,7 +24,23 @@ Put the tutorial modules into the system path
 source env.sh
 ```
 
-Make sure i-PI is also in the system path:
+If you haven't already, install i-pi to a convenient location (choose a suitable path instead of `/path/to/i-pi`):
+
+```bash
+git clone git@github.com:i-pi/i-pi.git /path/to/i-pi
+```
+
+Compile the drivers...
+
+```bash
+cd /path/to/i-pi
+cd drivers/f90
+make
+cd ../..
+```
+
+...and make sure i-PI is also in the system path:
+
 ```bash
 source /path/to/i-pi/env.sh
 ```
